@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BizStay — 출장자를 위한 기업 전용 장기숙박</title>
+<meta name="description" content="호텔의 유휴 객실을 기업 장기숙박 재고로 전환합니다. 보증금 없이 법인카드로 한 달, 예약부터 정산까지 하나의 시스템에서.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0F161D;
+  --ink-2:#18232E;
+  --ink-3:#243240;
+  --slate:#2B3946;
+  --mute:#6C7B89;
+  --mute-d:#8C9BA8;
+  --line:#D6DCE2;
+  --line-d:#2E3D4B;
+  --paper:#EDF0F3;
+  --card:#FFFFFF;
+  --lock:#DE8B22;
+  --lock-soft:#F6E2C4;
+  --free:#1C8B7C;
+  --free-soft:#CFE8E3;
+
+  --sans:"IBM Plex Sans KR",-apple-system,BlinkMacSystemFont,"Malgun Gothic",sans-serif;
+  --mono:"IBM Plex Mono","IBM Plex Sans KR",ui-monospace,monospace;
+
+  --pad:clamp(20px,5vw,72px);
+  --maxw:1180px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--paper);
+  color:var(--slate);
+  -webkit-font-smoothing:antialiased;
+  line-height:1.65;
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}
+}
+.wrap{max-width:var(--maxw);margin:0 auto;padding-left:var(--pad);padding-right:var(--pad)}
+
+/* ---------- 공통 타이포 ---------- */
+.eyebrow{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+  color:var(--mute);
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:18px;
+}
+.eyebrow::after{content:"";height:1px;flex:1;background:var(--line)}
+.on-dark .eyebrow{color:var(--mute-d)}
+.on-dark .eyebrow::after{background:var(--line-d)}
+
+h2{
+  font-size:clamp(25px,3.6vw,40px);
+  font-weight:600;
+  letter-spacing:-.02em;
+  line-height:1.28;
+  color:var(--ink);
+  margin-bottom:14px;
+}
+.lede{font-size:clamp(15px,1.6vw,17px);color:var(--mute);max-width:60ch}
+.on-dark h2{color:#fff}
+.on-dark .lede{color:var(--mute-d)}
+
+section{padding:clamp(64px,9vw,116px) 0}
+
+/* ---------- 상단바 ---------- */
+header{
+  position:sticky;top:0;z-index:50;
+  background:rgba(15,22,29,.86);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line-d);
+}
+.bar{display:flex;align-items:center;justify-content:space-between;height:62px}
+.mark{display:flex;align-items:baseline;gap:9px;text-decoration:none}
+.mark b{color:#fff;font-weight:700;font-size:19px;letter-spacing:-.02em}
+.mark span{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--lock)}
+.navlinks{display:flex;align-items:center;gap:26px}
+.navlinks a{
+  color:var(--mute-d);text-decoration:none;font-size:14px;font-weight:400;
+  transition:color .18s;
+}
+.navlinks a:hover,.navlinks a:focus-visible{color:#fff}
+.navlinks .btn-sm{
+  border:1px solid var(--line-d);border-radius:2px;padding:7px 15px;color:#fff;font-size:13px;
+}
+.navlinks .btn-sm:hover{background:#fff;color:var(--ink);border-color:#fff}
+@media(max-width:720px){.navlinks a:not(.btn-sm){display:none}}
+
+/* ---------- 히어로 ---------- */
+.hero{background:var(--ink);padding:clamp(56px,8vw,96px) 0 clamp(64px,9vw,104px)}
+.status{
+  display:inline-flex;align-items:center;gap:9px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.12em;
+  color:var(--lock);border:1px solid rgba(222,139,34,.4);
+  border-radius:2px;padding:5px 11px;margin-bottom:26px;
+}
+.status i{width:5px;height:5px;border-radius:50%;background:var(--lock);animation:blip 2.4s infinite}
+@keyframes blip{0%,100%{opacity:1}50%{opacity:.25}}
+
+h1{
+  font-size:clamp(31px,6.2vw,64px);
+  font-weight:600;line-height:1.16;letter-spacing:-.035em;
+  color:#fff;max-width:16ch;
+}
+h1 em{font-style:normal;color:var(--lock)}
+.hero p.sub{
+  margin-top:22px;max-width:52ch;
+  font-size:clamp(15px,1.7vw,18px);font-weight:300;color:var(--mute-d);
+}
+.cta{display:flex;flex-wrap:wrap;gap:11px;margin-top:34px}
+.btn{
+  font-family:var(--sans);font-size:14.5px;font-weight:500;
+  padding:13px 24px;border-radius:2px;text-decoration:none;
+  border:1px solid transparent;cursor:pointer;transition:.18s;
+}
+.btn-p{background:var(--lock);color:#20160A;border-color:var(--lock)}
+.btn-p:hover{background:#EFA13B;border-color:#EFA13B}
+.btn-s{background:transparent;color:#fff;border-color:var(--line-d)}
+.btn-s:hover{border-color:#fff}
+
+/* ---------- 시그니처: 재고 스트립 ---------- */
+.strip{
+  margin-top:clamp(44px,6vw,68px);
+  border:1px solid var(--line-d);border-radius:3px;
+  background:var(--ink-2);overflow:hidden;
+}
+.strip-head{
+  display:flex;justify-content:space-between;align-items:center;gap:12px;
+  padding:13px 16px;border-bottom:1px solid var(--line-d);
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mute-d);
+  flex-wrap:wrap;
+}
+.strip-head b{color:#fff;font-weight:500}
+.legend{display:flex;gap:16px;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:6px}
+.sw{width:9px;height:9px;border-radius:1px;display:inline-block}
+.sw.l{background:var(--lock)}
+.sw.f{background:var(--free)}
+
+.row{display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid rgba(46,61,75,.55)}
+.row:last-child{border-bottom:0}
+.rname{font-family:var(--mono);font-size:12px;color:#fff;width:64px;flex:none}
+.cells{display:flex;gap:2px;flex:1;min-width:0}
+.cell{
+  flex:1;min-width:0;height:26px;border-radius:1px;
+  background:var(--ink-3);
+  transition:background .3s ease;
+}
+.cell.lock{background:var(--lock)}
+.cell.free{background:var(--free)}
+.rstate{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  width:82px;flex:none;text-align:right;color:var(--mute-d);
+}
+.rstate.lock{color:var(--lock)}
+.rstate.free{color:var(--free)}
+.strip-foot{
+  padding:12px 16px;border-top:1px solid var(--line-d);
+  font-size:12.5px;color:var(--mute-d);
+}
+@media(max-width:640px){
+  .rname{width:48px;font-size:11px}
+  .rstate{width:64px;font-size:9px}
+  .cell{height:22px}
+}
+
+/* ---------- 문제 정의 ---------- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,3vw,34px);margin-top:46px}
+@media(max-width:800px){.two{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:clamp(22px,3vw,32px)}
+.panel h3{
+  font-size:17px;font-weight:600;color:var(--ink);margin-bottom:4px;letter-spacing:-.01em;
+}
+.panel .who{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--mute);margin-bottom:16px}
+.plist{list-style:none;display:flex;flex-direction:column;gap:11px}
+.plist li{display:flex;gap:11px;font-size:14.5px;color:var(--slate);line-height:1.5}
+.plist li::before{
+  content:"";flex:none;width:6px;height:6px;margin-top:8px;
+  border-radius:1px;background:var(--line);
+}
+.panel:hover .plist li::before{background:var(--lock)}
+.plist li::before{transition:background .25s}
+
+/* ---------- 작동 방식 ---------- */
+.steps{margin-top:46px;border-top:1px solid var(--line)}
+.step{
+  display:grid;grid-template-columns:56px 1fr 1.15fr;gap:clamp(14px,2.4vw,30px);
+  padding:24px 0;border-bottom:1px solid var(--line);align-items:start;
+}
+.step .n{font-family:var(--mono);font-size:12px;color:var(--mute);padding-top:3px;letter-spacing:.06em}
+.step h4{font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.01em}
+.step p{font-size:14.5px;color:var(--mute);margin-top:5px}
+.step .tag{
+  display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  padding:3px 8px;border-radius:2px;margin-top:9px;
+}
+.tag.l{background:var(--lock-soft);color:#8A5310}
+.tag.f{background:var(--free-soft);color:#0E5B50}
+@media(max-width:800px){
+  .step{grid-template-columns:44px 1fr}
+  .step p{grid-column:2}
+}
+
+/* ---------- 포털 3종 ---------- */
+.dark{background:var(--ink)}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,22px);margin-top:46px}
+@media(max-width:900px){.three{grid-template-columns:1fr}}
+.scr{border:1px solid var(--line-d);border-radius:3px;background:var(--ink-2);overflow:hidden;display:flex;flex-direction:column}
+.scr-top{
+  padding:11px 14px;border-bottom:1px solid var(--line-d);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--mute-d);
+}
+.scr-body{padding:16px 14px;flex:1}
+.scr h4{color:#fff;font-size:15px;font-weight:500;margin-bottom:12px}
+.kv{display:flex;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(46,61,75,.5);font-size:13px}
+.kv:last-child{border-bottom:0}
+.kv span{color:var(--mute-d)}
+.kv b{color:#fff;font-family:var(--mono);font-weight:500;font-size:13px}
+.scr-note{padding:12px 14px;border-top:1px solid var(--line-d);font-size:12.5px;color:var(--mute-d)}
+
+/* ---------- 지역 ---------- */
+.regions{display:flex;flex-wrap:wrap;gap:9px;margin-top:34px}
+.rg{
+  font-family:var(--mono);font-size:13px;letter-spacing:.02em;
+  padding:9px 15px;border:1px solid var(--line);border-radius:2px;
+  background:var(--card);color:var(--slate);
+}
+.rg b{color:var(--lock);font-weight:500}
+
+/* ---------- 로드맵 ---------- */
+.road{margin-top:44px;display:flex;flex-direction:column;gap:0}
+.rw{display:grid;grid-template-columns:104px 1fr;gap:clamp(14px,2.4vw,28px);padding:20px 0;border-top:1px solid var(--line)}
+.rw:last-child{border-bottom:1px solid var(--line)}
+.rw .ph{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--mute);padding-top:4px}
+.rw h4{font-size:16px;font-weight:600;color:var(--ink)}
+.rw p{font-size:14px;color:var(--mute);margin-top:4px}
+.rw.now{background:linear-gradient(90deg,rgba(222,139,34,.09),transparent 60%)}
+.rw.now .ph{color:var(--lock)}
+.now-badge{
+  font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;
+  background:var(--lock);color:#20160A;padding:2px 7px;border-radius:2px;margin-left:9px;
+  vertical-align:2px;
+}
+@media(max-width:700px){.rw{grid-template-columns:1fr}.rw .ph{padding-top:0}}
+
+/* ---------- 문의 ---------- */
+.form{
+  margin-top:40px;background:var(--card);border:1px solid var(--line);
+  border-radius:3px;padding:clamp(22px,3.4vw,38px);max-width:660px;
+}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:620px){.fgrid{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;color:var(--mute)}
+input,select,textarea{
+  font-family:var(--sans);font-size:14.5px;color:var(--ink);
+  border:1px solid var(--line);border-radius:2px;padding:11px 13px;
+  background:#fff;width:100%;
+}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--lock);outline-offset:1px;border-color:transparent}
+textarea{resize:vertical;min-height:96px}
+.form .btn-p{margin-top:20px;width:100%;text-align:center}
+.formnote{font-size:12.5px;color:var(--mute);margin-top:14px;line-height:1.55}
+.done{
+  display:none;border:1px solid var(--free);background:var(--free-soft);
+  border-radius:2px;padding:18px;margin-top:20px;font-size:14px;color:#0E5B50;
+}
+.done.on{display:block}
+
+/* ---------- 푸터 ---------- */
+footer{background:var(--ink);padding:46px 0 40px;border-top:1px solid var(--line-d)}
+.fbar{display:flex;justify-content:space-between;gap:22px;flex-wrap:wrap;align-items:flex-end}
+footer p{font-size:12.5px;color:var(--mute-d);line-height:1.7}
+.disc{
+  margin-top:26px;padding-top:20px;border-top:1px solid var(--line-d);
+  font-size:11.5px;color:#5D6B78;max-width:66ch;
+}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--lock);outline-offset:2px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap bar">
+    <a class="mark" href="#top"><b>BizStay</b><span>CORPORATE STAY</span></a>
+    <nav class="navlinks">
+      <a href="#problem">해결하는 문제</a>
+      <a href="#how">작동 방식</a>
+      <a href="#roadmap">진행 상황</a>
+      <a class="btn-sm" href="#contact">사전 문의</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<div class="hero on-dark" id="top">
+  <div class="wrap">
+    <div class="status"><i></i>준비 중 · 파일럿 파트너 모집</div>
+    <h1>출장자의 한 달을<br>호텔의 <em>빈 객실</em>로.</h1>
+    <p class="sub">
+      호텔 객실을 통째로 가져가지 않습니다. 1~2개만 기업 출장 전용으로 잡고,
+      예약이 끝나면 바로 되돌려 드립니다. 그동안 기업은 보증금 없이 법인카드로 한 달을 씁니다.
+    </p>
+    <div class="cta">
+      <a class="btn btn-p" href="#contact">호텔 제휴 문의</a>
+      <a class="btn btn-s" href="#contact">기업 도입 문의</a>
+    </div>
+
+    <!-- 시그니처 -->
+    <div class="strip" id="strip">
+      <div class="strip-head">
+        <b>객실 재고 &nbsp;/&nbsp; 2026.09.01 – 09.30</b>
+        <div class="legend">
+          <span><i class="sw l"></i>기업 전용 확보</span>
+          <span><i class="sw f"></i>일반 판매 가능</span>
+        </div>
+      </div>
+      <div class="row"><div class="rname">101</div><div class="cells" data-cells></div><div class="rstate" data-state>—</div></div>
+      <div class="row"><div class="rname">102</div><div class="cells" data-cells></div><div class="rstate" data-state>—</div></div>
+      <div class="row"><div class="rname">103</div><div class="cells" data-cells></div><div class="rstate" data-state>—</div></div>
+      <div class="strip-foot">
+        기업 예약이 들어오면 해당 기간만 잠기고, 체크아웃과 함께 풀립니다.
+        잠기지 않은 날짜는 기존 OTA와 워크인으로 그대로 파세요.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 문제 ===== -->
+<section id="problem">
+  <div class="wrap">
+    <div class="eyebrow">해결하는 문제</div>
+    <h2>출장 숙박은 여행 숙박과<br>다른 업무 흐름을 씁니다.</h2>
+    <p class="lede">기존 숙박 플랫폼은 1박 여행객 기준으로 만들어져 있습니다. 한 달짜리 출장 한 건을 처리하려면 회사도 호텔도 플랫폼 밖에서 일합니다.</p>
+
+    <div class="two">
+      <div class="panel">
+        <h3>출장을 보내는 기업</h3>
+        <div class="who">CORPORATE</div>
+        <ul class="plist">
+          <li>1박이 아니라 1주에서 한 달 이상 머뭅니다</li>
+          <li>보증금을 걸 수 없고, 개인카드도 쓸 수 없습니다</li>
+          <li>회사마다 숙박비 한도와 승인 절차가 다릅니다</li>
+          <li>영수증과 증빙을 출장자가 따로 모읍니다</li>
+          <li>현장 일정이 밀리면 숙박도 연장해야 합니다</li>
+          <li>주차, 세탁, 취사가 되는 곳을 골라야 합니다</li>
+        </ul>
+      </div>
+      <div class="panel">
+        <h3>객실을 가진 호텔</h3>
+        <div class="who">PARTNER</div>
+        <ul class="plist">
+          <li>기업 출장 고객을 직접 만날 채널이 없습니다</li>
+          <li>월 단위 상품을 팔 시스템이 없습니다</li>
+          <li>OTA 재고와 기업 재고를 동시에 관리해야 합니다</li>
+          <li>기업별 계약가를 따로 계산해야 합니다</li>
+          <li>정산과 세금계산서 처리가 번거롭습니다</li>
+          <li>객실을 장기간 묶어두는 것이 부담스럽습니다</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 작동 방식 ===== -->
+<section id="how" style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="eyebrow">작동 방식</div>
+    <h2>예약 한 건이 지나가는 경로</h2>
+    <p class="lede">기업 담당자가 시작하고, 정산으로 끝납니다. 사이의 모든 단계가 한 시스템 안에 있습니다.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="n">01</div>
+        <div><h4>출장자와 조건을 등록합니다</h4></div>
+        <p>기업 관리자가 출장 지역, 기간, 예산 한도를 넣습니다. 회사의 숙박비 정책이 검색 조건으로 그대로 들어갑니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">02</div>
+        <div><h4>정책에 맞는 숙소만 보여줍니다</h4></div>
+        <p>보증금 없음, 법인카드 가능, 월 단위 상품, 주차 여부로 걸러진 결과만 나옵니다. 한도를 넘는 숙소는 검색에서 빠집니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">03</div>
+        <div>
+          <h4>객실을 그 기간만 확보합니다</h4>
+          <span class="tag l">LOCK</span>
+        </div>
+        <p>예약된 날짜만 기업 전용으로 잠깁니다. 호텔의 나머지 객실과 나머지 날짜는 건드리지 않습니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">04</div>
+        <div><h4>법인카드로 결제하고 승인받습니다</h4></div>
+        <p>출장자가 개인 돈을 먼저 쓰지 않습니다. 회사 승인 절차와 결제가 같은 화면에서 이어집니다.</p>
+      </div>
+      <div class="step">
+        <div class="n">05</div>
+        <div>
+          <h4>체크아웃과 함께 되돌려 드립니다</h4>
+          <span class="tag f">RELEASE</span>
+        </div>
+        <p>예약이 끝나면 객실이 자동으로 풀려 기존 판매 채널로 돌아갑니다. 호텔 정산 내역과 증빙은 그대로 남습니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 포털 ===== -->
+<section class="dark on-dark">
+  <div class="wrap">
+    <div class="eyebrow">화면 구성</div>
+    <h2>보는 사람에 따라<br>필요한 화면이 다릅니다.</h2>
+    <p class="lede">같은 예약 한 건을 호텔은 재고로, 기업은 비용으로, 출장자는 머물 곳으로 봅니다. 세 개의 화면을 따로 만드는 이유입니다.</p>
+
+    <div class="three">
+      <div class="scr">
+        <div class="scr-top">HOTEL PARTNER</div>
+        <div class="scr-body">
+          <h4>객실 재고와 정산</h4>
+          <div class="kv"><span>오늘 체크인</span><b>—</b></div>
+          <div class="kv"><span>투숙 중</span><b>—</b></div>
+          <div class="kv"><span>이번 달 예약</span><b>—</b></div>
+          <div class="kv"><span>정산 예정액</span><b>—</b></div>
+        </div>
+        <div class="scr-note">어느 객실이 언제까지 잠겨 있는지, 언제 풀리는지를 한 화면에서 봅니다.</div>
+      </div>
+      <div class="scr">
+        <div class="scr-top">CORPORATE ADMIN</div>
+        <div class="scr-body">
+          <h4>출장자와 숙박비</h4>
+          <div class="kv"><span>등록 출장자</span><b>—</b></div>
+          <div class="kv"><span>투숙 중</span><b>—</b></div>
+          <div class="kv"><span>이번 달 숙박비</span><b>—</b></div>
+          <div class="kv"><span>승인 대기</span><b>—</b></div>
+        </div>
+        <div class="scr-note">숙박비 한도와 승인 규칙을 걸어두면 그 밖의 예약은 올라오지 않습니다.</div>
+      </div>
+      <div class="scr">
+        <div class="scr-top">BUSINESS TRAVELER</div>
+        <div class="scr-body">
+          <h4>내 출장 숙소</h4>
+          <div class="kv"><span>보증금</span><b>없음</b></div>
+          <div class="kv"><span>결제</span><b>법인카드</b></div>
+          <div class="kv"><span>기간</span><b>월 단위</b></div>
+          <div class="kv"><span>연장</span><b>앱에서 요청</b></div>
+        </div>
+        <div class="scr-note">현장 일정이 밀리면 연장 요청을 넣고, 승인은 회사가 처리합니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 지역 ===== -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">우선 검토 지역</div>
+    <h2>산업단지가 있는 곳부터<br>제휴를 시작합니다.</h2>
+    <p class="lede">제조, 설비, 자동화, 건설 현장이 몰려 있고 장기 파견 인력이 실제로 머무는 지역을 먼저 봅니다. 대형 체인보다 중소형 비즈니스호텔과 레지던스가 대상입니다.</p>
+    <div class="regions">
+      <span class="rg"><b>파주</b></span><span class="rg"><b>오창</b></span>
+      <span class="rg"><b>평택</b></span><span class="rg"><b>화성</b></span>
+      <span class="rg"><b>천안</b></span><span class="rg"><b>구미</b></span>
+      <span class="rg"><b>창원</b></span><span class="rg"><b>울산</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 로드맵 ===== -->
+<section id="roadmap" style="background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line)">
+  <div class="wrap">
+    <div class="eyebrow">진행 상황</div>
+    <h2>지금 어디까지 왔는지</h2>
+    <p class="lede">아직 서비스를 열지 않았습니다. 아래는 실제 개발 단계이고, 지금은 두 번째 칸에 있습니다.</p>
+
+    <div class="road">
+      <div class="rw">
+        <div class="ph">01 · 완료</div>
+        <div><h4>사업모델과 MVP 범위 확정</h4><p>호텔·기업 양쪽 요구사항 정리, 수익 구조와 기능 범위 결정.</p></div>
+      </div>
+      <div class="rw now">
+        <div class="ph">02 · 진행 중</div>
+        <div><h4>데이터베이스와 시스템 설계<span class="now-badge">NOW</span></h4><p>객실 재고 잠금, 결제, 정산 구조 설계. 실제 코드 작성 전 단계입니다.</p></div>
+      </div>
+      <div class="rw">
+        <div class="ph">03 · 예정</div>
+        <div><h4>MVP 개발</h4><p>기업 포털, 호텔 파트너 포털, 예약과 정산. 결제는 먼저 테스트 모드로 붙입니다.</p></div>
+      </div>
+      <div class="rw">
+        <div class="ph">04 · 예정</div>
+        <div><h4>현장 테스트</h4><p>호텔을 직접 방문해 객실을 등록하고, 직원 교육 후 실제 예약을 받아봅니다.</p></div>
+      </div>
+      <div class="rw">
+        <div class="ph">05 · 예정</div>
+        <div><h4>확장</h4><p>호텔 PMS와 기업 ERP 연동, 외부 시스템용 API, 이후 해외 출장 지역으로 확대.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 문의 ===== -->
+<section id="contact">
+  <div class="wrap">
+    <div class="eyebrow">사전 문의</div>
+    <h2>먼저 이야기해 볼 파트너를 찾고 있습니다.</h2>
+    <p class="lede">
+      호텔이시라면 객실 한두 개로 시작할 수 있는지 같이 보고, 기업이시라면 출장 숙박을 지금 어떻게 처리하시는지 듣고 싶습니다.
+      아직 계약 단계가 아니라 이야기를 나누는 단계입니다.
+    </p>
+
+    <div class="form">
+      <div class="fgrid">
+        <div class="field">
+          <label for="f-type">어느 쪽이신가요</label>
+          <select id="f-type">
+            <option>호텔 · 레지던스</option>
+            <option>기업 (출장 담당)</option>
+            <option>그 외</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-org">회사 · 숙소명</label>
+          <input id="f-org" type="text" placeholder="예: 파주 OO비즈니스호텔">
+        </div>
+        <div class="field">
+          <label for="f-name">담당자 성함</label>
+          <input id="f-name" type="text" placeholder="홍길동">
+        </div>
+        <div class="field">
+          <label for="f-contact">연락처 또는 이메일</label>
+          <input id="f-contact" type="text" placeholder="010-0000-0000">
+        </div>
+        <div class="field full">
+          <label for="f-msg">궁금한 점 (선택)</label>
+          <textarea id="f-msg" placeholder="예: 객실 2개로 시작하면 기존 OTA 판매에 영향이 있는지 궁금합니다."></textarea>
+        </div>
+      </div>
+      <button class="btn btn-p" id="submit" type="button">문의 남기기</button>
+      <p class="formnote">받은 내용은 파일럿 파트너 논의 목적으로만 씁니다. 영업 메일을 보내지 않습니다.</p>
+      <div class="done" id="done"></div>
+    </div>
+  </div>
+</section>
+
+<footer class="on-dark">
+  <div class="wrap">
+    <div class="fbar">
+      <div>
+        <a class="mark" href="#top" style="margin-bottom:12px"><b>BizStay</b><span>CORPORATE STAY</span></a>
+        <p>출장자를 위한 기업 전용 장기숙박 플랫폼</p>
+      </div>
+      <p>© 2026 BizStay</p>
+    </div>
+    <p class="disc">
+      이 페이지는 서비스 출시 전 소개용입니다. 화면에 보이는 객실 번호와 날짜는 재고 관리 방식을 설명하기 위한 예시이며 실제 판매 중인 상품이 아닙니다.
+      제휴 호텔 수, 요금, 정산 조건은 확정되지 않았습니다.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  const DAYS = 30;
+  const rows = [...document.querySelectorAll('#strip .row')];
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // 셀 생성
+  rows.forEach(r => {
+    const box = r.querySelector('[data-cells]');
+    for (let i = 0; i < DAYS; i++) {
+      const c = document.createElement('div');
+      c.className = 'cell';
+      box.appendChild(c);
+    }
+  });
+
+  const cellsOf = r => [...r.querySelectorAll('.cell')];
+  const setState = (r, cls, text) => {
+    const s = r.querySelector('[data-state]');
+    s.className = 'rstate ' + cls;
+    s.textContent = text;
+  };
+  const clear = r => {
+    cellsOf(r).forEach(c => c.className = 'cell');
+    setState(r, '', '—');
+  };
+
+  let timers = [];
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  const stop = () => { timers.forEach(clearTimeout); timers = []; };
+
+  // 정적 상태 (모션 축소 설정일 때)
+  function still(){
+    cellsOf(rows[0]).forEach(c => c.classList.add('lock'));
+    setState(rows[0], 'lock', '기업 전용');
+    cellsOf(rows[1]).forEach(c => c.classList.add('free'));
+    setState(rows[1], 'free', '판매 가능');
+    cellsOf(rows[2]).slice(0, 14).forEach(c => c.classList.add('lock'));
+    cellsOf(rows[2]).slice(14).forEach(c => c.classList.add('free'));
+    setState(rows[2], 'lock', '일부 확보');
+  }
+
+  function cycle(){
+    stop();
+    rows.forEach(clear);
+
+    // 102호: 계속 판매 가능
+    cellsOf(rows[1]).forEach((c, i) => later(() => c.classList.add('free'), 260 + i * 12));
+    later(() => setState(rows[1], 'free', '판매 가능'), 640);
+
+    // 101호: 30일 전부 잠김 → 풀림
+    const a = cellsOf(rows[0]);
+    a.forEach((c, i) => later(() => c.classList.add('lock'), 500 + i * 46));
+    later(() => setState(rows[0], 'lock', '기업 전용'), 560);
+    later(() => {
+      a.forEach((c, i) => later(() => {
+        c.classList.remove('lock');
+        c.classList.add('free');
+      }, i * 22));
+      setState(rows[0], 'free', '판매 가능');
+    }, 3200);
+
+    // 103호: 후반 절반만 확보
+    const c3 = cellsOf(rows[2]);
+    c3.slice(0, 16).forEach((c, i) => later(() => c.classList.add('free'), 900 + i * 26));
+    c3.slice(16).forEach((c, i) => later(() => c.classList.add('lock'), 1500 + i * 46));
+    later(() => setState(rows[2], 'lock', '일부 확보'), 1600);
+
+    later(cycle, 6400);
+  }
+
+  if (reduce) { still(); return; }
+
+  const strip = document.getElementById('strip');
+  let running = false;
+  new IntersectionObserver(es => {
+    es.forEach(e => {
+      if (e.isIntersecting && !running) { running = true; cycle(); }
+      else if (!e.isIntersecting && running) { running = false; stop(); }
+    });
+  }, { threshold: 0.25 }).observe(strip);
+})();
+
+// 문의 폼 (아직 서버에 연결되지 않음)
+document.getElementById('submit').addEventListener('click', function(){
+  const org = document.getElementById('f-org').value.trim();
+  const contact = document.getElementById('f-contact').value.trim();
+  const done = document.getElementById('done');
+
+  if (!org || !contact) {
+    done.className = 'done on';
+    done.style.borderColor = '#DE8B22';
+    done.style.background = '#F6E2C4';
+    done.style.color = '#8A5310';
+    done.textContent = '회사·숙소명과 연락처를 넣어주세요. 이 두 가지가 있어야 연락드릴 수 있습니다.';
+    return;
+  }
+  done.className = 'done on';
+  done.removeAttribute('style');
+  done.textContent = '접수됐습니다. 영업일 기준 2일 안에 연락드리겠습니다. (※ 현재는 화면 확인용이며 실제 전송은 연결 전입니다)';
+});
+</script>
+</body>
+</html>
